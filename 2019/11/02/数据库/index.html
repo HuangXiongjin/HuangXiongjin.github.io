@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="数据库(DATABASE)MySQL数据库数据库基本理念  数据的集散地（仓库） 数据的持久化：把数据从内存转移到能够长久存储数据的存储介质中，长久的保存数据 数据的持久化不仅仅是为了保存数据，而是为了能够更好的管理数据，当需要的数据的时候能按照我们的需求来获取对    应的数据。 大多数的数据库都能够保存数据的一致性、完整性并减少数据的冗余。   分类 关系型数据库的产品   Oracle -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的文章">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;02&#x2F;%E6%95%B0%E6%8D%AE%E5%BA%93&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="数据库(DATABASE)MySQL数据库数据库基本理念  数据的集散地（仓库） 数据的持久化：把数据从内存转移到能够长久存储数据的存储介质中，长久的保存数据 数据的持久化不仅仅是为了保存数据，而是为了能够更好的管理数据，当需要的数据的时候能按照我们的需求来获取对    应的数据。 大多数的数据库都能够保存数据的一致性、完整性并减少数据的冗余。   分类 关系型数据库的产品   Oracle -">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-03T03:22:19.080Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/11/02/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>我的文章 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/02/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            我的文章
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-02 16:48:54" itemprop="dateCreated datePublished" datetime="2019-11-02T16:48:54+08:00">2019-11-02</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-03 11:22:19" itemprop="dateModified" datetime="2019-11-03T11:22:19+08:00">2019-11-03</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="数据库-DATABASE"><a href="#数据库-DATABASE" class="headerlink" title="数据库(DATABASE)"></a>数据库(DATABASE)</h2><h2 id="MySQL数据库"><a href="#MySQL数据库" class="headerlink" title="MySQL数据库"></a>MySQL数据库</h2><h3 id="数据库基本理念"><a href="#数据库基本理念" class="headerlink" title="数据库基本理念"></a>数据库基本理念</h3><blockquote>
+<ol>
+<li>数据的集散地（仓库）</li>
+<li>数据的持久化：把数据从内存转移到能够长久存储数据的存储介质中，长久的保存数据</li>
+<li>数据的持久化不仅仅是为了保存数据，而是为了能够更好的管理数据，当需要的数据的时候能按照我们的需求来获取对    应的数据。</li>
+<li>大多数的数据库都能够保存数据的一致性、完整性并减少数据的冗余。</li>
+</ol>
+</blockquote>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ol>
+<li><p>关系型数据库的产品</p>
+<blockquote>
+<ol>
+<li>Oracle - 银行、电子政务、大型电商企业</li>
+<li>MySQL - 中小企业 –&gt; MariaDB</li>
+<li>DB2 - IBM的产品</li>
+<li>SQLServer - (Microsoft)微软的产品</li>
+<li>SQLite / PostagreSQL</li>
+</ol>
+</blockquote>
+</li>
+<li><p>关系型数据库的特点</p>
+<blockquote>
+<ol>
+<li>理论基础：关系代数 + 集合论</li>
+<li>具体表现形式：用二维表来保存数据 ，行 – 记录(record) 列 – 字段(field) 主键列 (primary key）</li>
+<li>编程语言 ：SQL (Structured Query Language ) ：结构化查询语言<ul>
+<li>DDL：数据定义语言 —— create / drop / alter</li>
+<li>DML：数据操纵语言 CRUD(增查改删) —— insert / delete / update / select </li>
+<li>DCL：数据控制语言 —— grank (授予权限)/ revoke (召回权限)</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p>非关系数据库的产品</p>
+<blockquote>
+<ol>
+<li><p>MongoDB</p>
+</li>
+<li><p>Redis</p>
+</li>
+<li><p>ElasticSearch</p>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<h3 id="范式理论-设计二维表的指导思想"><a href="#范式理论-设计二维表的指导思想" class="headerlink" title="范式理论 - 设计二维表的指导思想"></a>范式理论 - 设计二维表的指导思想</h3><blockquote>
+<ol>
+<li>第一范式：数据表的每个列的值域都是原子值组成的，不能够在分割。</li>
+<li>第二范式：数据表里的所有数据都要和该表的键（主键与候选键）有完全依赖关系。</li>
+<li>第三范式：所有的非键属性都只和候选键有相关性，也就是非键属性之间应该独立。</li>
+</ol>
+</blockquote>
+<h3 id="数据的完整性"><a href="#数据的完整性" class="headerlink" title="数据的完整性"></a>数据的完整性</h3><blockquote>
+<ol>
+<li>实体完整性：每个实体都是独一无二的<ul>
+<li>主键（primary key）</li>
+<li>唯一约束（unique）</li>
+<li>唯一索引</li>
+</ul>
+</li>
+<li>参照完整性（引用完整性）：关系中不允许引用不存在的实体<ul>
+<li>外键（foreign key）</li>
+</ul>
+</li>
+<li>域完整性：数据是有效的<ul>
+<li>数据类型以及长度</li>
+<li>非空约束（not null）</li>
+<li>默认值约束（default）</li>
+<li>检查约束（check）MySQL不支持</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h3 id="数据的一致性"><a href="#数据的一致性" class="headerlink" title="数据的一致性"></a>数据的一致性</h3><h4 id="1-事务"><a href="#1-事务" class="headerlink" title="1.事务"></a>1.事务</h4><ul>
+<li><p>事务：一系列对数据库进行的读/写操作，这些操作要么全都成功，要么全都失败。</p>
+</li>
+<li><p>事务的ACID特性：</p>
+<ul>
+<li>原子性（Atomicity）：事务作为一个整体被执行，对数据库的操作要么全都执行成功，要么就全都执行失败。</li>
+<li>一致性（Consistency）：执行完某个事务的时候，数据库的状态应该与操作前后的状态保持数据的一致性。</li>
+<li>隔离性（Isolation）：多个事务并发执行的时候，每个事务的执行都不会影响另一个事务的执行。</li>
+<li>持久性（Duration）：已经被提交的事务，应该被永久的保存在数据库中。</li>
+</ul>
+</li>
+<li><p>MySQL中事务的操作</p>
+<ul>
+<li>begin / start transaction ：开启事务坏境</li>
+<li>commit ：提交事务，只有begin到commit之间的所有sql语句都执行成功才会执行commit，否则执行rollback</li>
+<li>rollback ：事务回滚，放弃begin到commit之间执行成功的所有sql语句</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> 示例：</span><br><span class="line">     begin;</span><br><span class="line">     insert into tb_dept values (<span class="number">1001</span>, <span class="string">'游戏部'</span>, <span class="string">'成都'</span>);</span><br><span class="line">     insert into tb_dept values (<span class="number">1001</span>, <span class="string">'游戏部2'</span>, <span class="string">'成都2'</span>);</span><br><span class="line">     commit;</span><br><span class="line">     rollback;</span><br><span class="line"> </span><br><span class="line">通过例子可以得出，当在执行插入第二条数据的时候发生错误，执行了rollback，尽管第一条语句没有问题但是因为第二条数据出错执行了rollback，所以本次的所有执行将会被退回。</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h4 id="2-索引"><a href="#2-索引" class="headerlink" title="2.索引"></a>2.索引</h4><ul>
+<li><p>字段的索引就相当于目录，添加索引可以大大提高查询的效率</p>
+</li>
+<li><p>两个很大的缺点：1. 会消耗额外的存储空间</p>
+<p>​                               2.会让增删改数据的效率降低，因为增加了更新索引的时间    </p>
+</li>
+<li><p>索引不能滥用，当项目中的某个字段的查询很频繁时，应考虑添加一个对应的索引。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">创建索引：create index &lt;索引名称&gt; on 表明 (字段名);</span><br><span class="line"></span><br><span class="line">删除索引：alter table 表名 drop index &lt;索引名称;</span><br><span class="line">explain 描述，说明 -- 用来查看SQL语句的执行计划（执行效率），主要看type和rows的值</span><br><span class="line"></span><br><span class="line">例如：</span><br><span class="line">create index index_ename on tb_emp (ename);</span><br><span class="line">explain select * from tb_emp where ename=&apos;张三丰&apos;;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3-视图"><a href="#3-视图" class="headerlink" title="3.视图"></a>3.视图</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-- 创建视图（查询的快照）</span><br><span class="line">    create view vw_emp_simple as </span><br><span class="line">    select eno, ename, job, dname </span><br><span class="line">    from tb_emp t1, tb_dept t2 </span><br><span class="line">    where t1.dno=t2.dno;</span><br><span class="line">    </span><br><span class="line">-- 查询视图</span><br><span class="line">   select * from vw_emp_simple;</span><br><span class="line">    </span><br><span class="line">-- 创建用户并授予查看视图的权限</span><br><span class="line">   create user &apos;hellokitty&apos;@&apos;%&apos; identified by &apos;hellokitty.618&apos;;</span><br><span class="line">   grant select on hrs.vw_emp_simple to &apos;hellokitty&apos;@&apos;%&apos;;</span><br><span class="line">    </span><br><span class="line">-- 召回用户查看视图的权限</span><br><span class="line">   revoke select on hrs.vw_emp_simple from &apos;hellokitty&apos;@&apos;%&apos;;</span><br><span class="line">    </span><br><span class="line">-- 删除视图</span><br><span class="line">            drop view vw_emp_simple;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Redis数据库"><a href="#Redis数据库" class="headerlink" title="Redis数据库"></a>Redis数据库</h2><h3 id="Redis（Remote-Dictionary-Server）"><a href="#Redis（Remote-Dictionary-Server）" class="headerlink" title="Redis（Remote Dictionary Server）"></a>Redis（Remote Dictionary Server）</h3><blockquote>
+<p>以键值对的形式存储数据的数据库，放在内存中，读/存数据速度快速，单线程+异步I/O（多路I/O复用）的工作模式</p>
+</blockquote>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><blockquote>
+<ol>
+<li>高速缓存服务（用户经常访问的数据从数据库搬到内存中）</li>
+<li>实时排行榜</li>
+<li>投票点赞</li>
+<li>消息队</li>
+</ol>
+</blockquote>
+<h3 id="常用的几种类型"><a href="#常用的几种类型" class="headerlink" title="常用的几种类型"></a>常用的几种类型</h3><h4 id="1-字符串（String）"><a href="#1-字符串（String）" class="headerlink" title="1. 字符串（String）"></a>1. 字符串（String）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">set key value - 创建一个字符串类型的键值对</span><br><span class="line">set key value ex 30 - 将键的过期时间设置为30seconds后消失</span><br><span class="line">ttl key - 查看该键何是消失（-1永不超时）</span><br><span class="line">get key - 获取key对应的value</span><br><span class="line">mset a 1 b 3 c 4 - 创建多组键值对</span><br><span class="line">mget a b c - 获取多组键值对的值</span><br><span class="line">dbsize - 查看有几组键值对</span><br><span class="line">del key1 key2 - 删除指定键值对</span><br><span class="line">exists key - 查看是否存在该键值对</span><br><span class="line">setnx / sertex</span><br><span class="line">bgsave - 后台保存</span><br><span class="line">select &lt;数字&gt; - 切换数据库（初始在0，共有16个）</span><br><span class="line">flushdb(flushall) - 删除当前数据库（所有数据库）</span><br><span class="line">incr key - 当键值对的值是数字的时候，可以使用incr让值加一,相当于value += 1操作</span><br><span class="line">desr key - 值减1</span><br><span class="line">incrby key &lt;num&gt; - 指定键值对的值增加多少, value += num</span><br><span class="line">strlen key - 获取键值对的长度</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-哈希表（hash）"><a href="#2-哈希表（hash）" class="headerlink" title="2. 哈希表（hash）"></a>2. 哈希表（hash）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">hset &lt;字段名&gt; key1 value1 - 一次创建一个键值对</span><br><span class="line">hset &lt;字段名&gt; key2 value2</span><br><span class="line">hmset &lt;字段名&gt; key1 value1 key2 value2... - 一次性创建多个键值对</span><br><span class="line">hget &lt;字段名&gt; key1 - 获取key对应的value</span><br><span class="line">hmget &lt;字段名&gt; key1 key2.. - 获取多个value</span><br><span class="line">hkeys &lt;字段名&gt; - 获取全部的key</span><br><span class="line">hvals &lt;字段名&gt; - 获取全部value</span><br><span class="line">hgetall &lt;字段名&gt; - 获取全部key和value</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">127.0.0.1:6379&gt; hset stu stuid 1001</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hset stu name huang</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hset stu gender male</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hmset stu2 stuid 1002 name xiong gender male bitrh 1996-10-28</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hget stu</span><br><span class="line">(error) ERR wrong number of arguments for &apos;hget&apos; command</span><br><span class="line">127.0.0.1:6379&gt; hget stu stuid</span><br><span class="line">&quot;1001&quot;</span><br><span class="line">127.0.0.1:6379&gt; hmget stuid name gender</span><br><span class="line">1) (nil)</span><br><span class="line">2) (nil)</span><br><span class="line">127.0.0.1:6379&gt; hmget stu name gender </span><br><span class="line">1) &quot;huang&quot;</span><br><span class="line">2) &quot;male&quot;</span><br><span class="line">127.0.0.1:6379&gt; hvals stu</span><br><span class="line">1) &quot;1001&quot;</span><br><span class="line">2) &quot;huang&quot;</span><br><span class="line">3) &quot;male&quot;</span><br><span class="line">127.0.0.1:6379&gt; hgetall stu</span><br><span class="line">1) &quot;stuid&quot;</span><br><span class="line">2) &quot;1001&quot;</span><br><span class="line">3) &quot;name&quot;</span><br><span class="line">4) &quot;huang&quot;</span><br><span class="line">5) &quot;gender&quot;</span><br><span class="line">6) &quot;male&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-列表（List）"><a href="#3-列表（List）" class="headerlink" title="3. 列表（List）"></a>3. 列表（List）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- lpush key value —— 往列表的左边依次放数据</span><br><span class="line">- rpush key value —— 往列表的右边依次存放数据</span><br><span class="line">- lrange key &lt;开始下标&gt; &lt;结束下标&gt; —— 遍历列表中的值</span><br><span class="line">- lpop key —— 移出列表中左边第一个值</span><br><span class="line">- rpop key —— 移出列表中右边的第一个值</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">127.0.0.1:6379&gt; lpush numbers 1 2 3 4 5 6 </span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; lrange numbers 0 6</span><br><span class="line">1) &quot;6&quot;</span><br><span class="line">2) &quot;5&quot;</span><br><span class="line">3) &quot;4&quot;</span><br><span class="line">4) &quot;3&quot;</span><br><span class="line">5) &quot;2&quot;</span><br><span class="line">6) &quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt; lpop numbers </span><br><span class="line">&quot;6&quot;</span><br><span class="line">127.0.0.1:6379&gt; lpop numbers1</span><br><span class="line">&quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt; rpop numbers1</span><br><span class="line">&quot;6&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-集合（Set）自动去重"><a href="#4-集合（Set）自动去重" class="headerlink" title="4. 集合（Set）自动去重"></a>4. 集合（Set）自动去重</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- sadd key value1 value2... —— 往集合(key)中添加元素</span><br><span class="line">- srem key value1—— 删除元素</span><br><span class="line">- smembers key —— 查看集合中的元素</span><br><span class="line">- scard key —— 查看集合中元素的个数</span><br><span class="line">- sismember key value —— 查看指定元素是否在集合中，1在0不在</span><br><span class="line">- spop key &lt;num&gt; —— 随机移除集合中的num个元素</span><br><span class="line">- sinter key1 key2 —— 求交集</span><br><span class="line">- sunion key1 key2 —— 求并集</span><br><span class="line">- sdiff key1 key2 —— 求差集</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">127.0.0.1:6379&gt; sadd set1 1 2 3 4 5 6</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; smembers set1</span><br><span class="line">1) &quot;1&quot;</span><br><span class="line">2) &quot;2&quot;</span><br><span class="line">3) &quot;3&quot;</span><br><span class="line">4) &quot;4&quot;</span><br><span class="line">5) &quot;5&quot;</span><br><span class="line">6) &quot;6&quot;</span><br><span class="line">127.0.0.1:6379&gt; scard set1</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; sismembers set1 7</span><br><span class="line">(error) ERR unknown command `sismembers`, with args beginning with: `set1`, `7`, </span><br><span class="line">127.0.0.1:6379&gt; sismember set1 7</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; sismember set1 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-有序集合（Zset）"><a href="#5-有序集合（Zset）" class="headerlink" title="5. 有序集合（Zset）"></a>5. 有序集合（Zset）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">- zadd student 100 zhangsan 88 wangwu 98 zhaoliu —— 创建一个有序集合</span><br><span class="line">- zrange student 0 -1—— 根据分数升序，0 -1 表示显示全部的记录</span><br><span class="line">- zrange student 0 -1 wtihtscores —— (withscores)连同结果一并显示</span><br><span class="line">- zrevrange sorce 0 -1 —— 降序</span><br><span class="line">- zincrby student 150 wangwu —— 修改wangwu的分数</span><br><span class="line"></span><br><span class="line">示例：</span><br><span class="line">127.0.0.1:6379&gt; zadd student 100 zhangsan 88 wangwu 98 zhaoliu</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zrange student 0 -1</span><br><span class="line">1) &quot;san&quot;</span><br><span class="line">2) &quot;zhang&quot;</span><br><span class="line">3) &quot;wangwu&quot;</span><br><span class="line">4) &quot;zhaoliu&quot;</span><br><span class="line">5) &quot;zhangsan&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrange student 0 -1 withscores</span><br><span class="line">1) &quot;san&quot;</span><br><span class="line">2) &quot;34&quot;</span><br><span class="line">3) &quot;zhang&quot;</span><br><span class="line">4) &quot;78&quot;</span><br><span class="line">5) &quot;wangwu&quot;</span><br><span class="line">6) &quot;88&quot;</span><br><span class="line">7) &quot;zhaoliu&quot;</span><br><span class="line">8) &quot;98&quot;</span><br><span class="line">9) &quot;zhangsan&quot;</span><br><span class="line">10) &quot;100&quot; </span><br><span class="line">127.0.0.1:6379&gt; zadd student 100 zhangsan 88 wangwu 98 zhaoliu</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zrange student 0 -1</span><br><span class="line">1) &quot;san&quot;</span><br><span class="line">2) &quot;zhang&quot;</span><br><span class="line">3) &quot;wangwu&quot;</span><br><span class="line">4) &quot;zhaoliu&quot;</span><br><span class="line">5) &quot;zhangsan&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrange student 0 -1 withscores</span><br><span class="line">1) &quot;san&quot;</span><br><span class="line">2) &quot;34&quot;</span><br><span class="line">3) &quot;zhang&quot;</span><br><span class="line">4) &quot;78&quot;</span><br><span class="line">5) &quot;wangwu&quot;</span><br><span class="line">6) &quot;88&quot;</span><br><span class="line">7) &quot;zhaoliu&quot;</span><br><span class="line">8) &quot;98&quot;</span><br><span class="line">9) &quot;zhangsan&quot;</span><br><span class="line">10) &quot;100&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/02/Linux%E9%87%8D%E8%A6%81%E5%91%BD%E4%BB%A4/" rel="next" title="Linux重要命令">
+                  <i class="fa fa-chevron-left"></i> Linux重要命令
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/02/%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86/" rel="prev" title="进程管理">
+                  进程管理 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库-DATABASE"><span class="nav-number">1.</span> <span class="nav-text">数据库(DATABASE)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL数据库"><span class="nav-number">2.</span> <span class="nav-text">MySQL数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库基本理念"><span class="nav-number">2.1.</span> <span class="nav-text">数据库基本理念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类"><span class="nav-number">2.2.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#范式理论-设计二维表的指导思想"><span class="nav-number">2.3.</span> <span class="nav-text">范式理论 - 设计二维表的指导思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据的完整性"><span class="nav-number">2.4.</span> <span class="nav-text">数据的完整性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据的一致性"><span class="nav-number">2.5.</span> <span class="nav-text">数据的一致性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-事务"><span class="nav-number">2.5.1.</span> <span class="nav-text">1.事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-索引"><span class="nav-number">2.5.2.</span> <span class="nav-text">2.索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-视图"><span class="nav-number">2.5.3.</span> <span class="nav-text">3.视图</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据库"><span class="nav-number">3.</span> <span class="nav-text">Redis数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis（Remote-Dictionary-Server）"><span class="nav-number">3.1.</span> <span class="nav-text">Redis（Remote Dictionary Server）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景"><span class="nav-number">3.2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用的几种类型"><span class="nav-number">3.3.</span> <span class="nav-text">常用的几种类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-字符串（String）"><span class="nav-number">3.3.1.</span> <span class="nav-text">1. 字符串（String）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-哈希表（hash）"><span class="nav-number">3.3.2.</span> <span class="nav-text">2. 哈希表（hash）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-列表（List）"><span class="nav-number">3.3.3.</span> <span class="nav-text">3. 列表（List）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-集合（Set）自动去重"><span class="nav-number">3.3.4.</span> <span class="nav-text">4. 集合（Set）自动去重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-有序集合（Zset）"><span class="nav-number">3.3.5.</span> <span class="nav-text">5. 有序集合（Zset）</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
