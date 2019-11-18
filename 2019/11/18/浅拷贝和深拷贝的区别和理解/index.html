@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="浅拷贝和深拷贝的区别和理解python中的数据类型 python3中有6个标准的数据类型  Number (数字)：int、float、bool、complex. String (字符串) List  (列表) Tuple (元组) Set （集合） Dictionary (字典)   数据类型的特点  可变数据类型：List 、Dictionary、Set  当该数据类型的值发生了改变，那么它对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅拷贝和深拷贝的区别和理解">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;18&#x2F;%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%90%86%E8%A7%A3&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="浅拷贝和深拷贝的区别和理解python中的数据类型 python3中有6个标准的数据类型  Number (数字)：int、float、bool、complex. String (字符串) List  (列表) Tuple (元组) Set （集合） Dictionary (字典)   数据类型的特点  可变数据类型：List 、Dictionary、Set  当该数据类型的值发生了改变，那么它对">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-17T15:11:41.799Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/11/18/%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%90%86%E8%A7%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>浅拷贝和深拷贝的区别和理解 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/18/%E6%B5%85%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B7%B1%E6%8B%B7%E8%B4%9D%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            浅拷贝和深拷贝的区别和理解
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-18 09:13:51" itemprop="dateCreated datePublished" datetime="2019-11-18T09:13:51+08:00">2019-11-18</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-17 23:11:41" itemprop="dateModified" datetime="2019-11-17T23:11:41+08:00">2019-11-17</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="浅拷贝和深拷贝的区别和理解"><a href="#浅拷贝和深拷贝的区别和理解" class="headerlink" title="浅拷贝和深拷贝的区别和理解"></a>浅拷贝和深拷贝的区别和理解</h2><h3 id="python中的数据类型"><a href="#python中的数据类型" class="headerlink" title="python中的数据类型"></a>python中的数据类型</h3><ol>
+<li><p>python3中有6个标准的数据类型</p>
+<ul>
+<li>Number (数字)：int、float、bool、complex.</li>
+<li>String (字符串)</li>
+<li>List  (列表)</li>
+<li>Tuple (元组)</li>
+<li>Set （集合）</li>
+<li>Dictionary (字典)</li>
+</ul>
+</li>
+<li><p>数据类型的特点</p>
+<ul>
+<li><p>可变数据类型：List 、Dictionary、Set</p>
+<blockquote>
+<p>当该数据类型的值发生了改变，那么它对应的内存地址不会发生改变。</p>
+</blockquote>
+</li>
+<li><p>不可变数据类型：Number、String 、Tuple</p>
+<blockquote>
+<p>当该数据类型的值发生了改变，那么它对应的内存地址也发生改变。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h3><blockquote>
+<p>使用copy 模块中的copy方法实现浅拷贝</p>
+</blockquote>
+<p><strong>1. 不可变类型 Number、String、Tuple</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># Number</span><br><span class="line">In [1]: import copy</span><br><span class="line"></span><br><span class="line">In [2]: num1 =1234</span><br><span class="line"></span><br><span class="line">In [3]: num2 = copy.copy(num1)</span><br><span class="line"></span><br><span class="line">In [4]: id(num1)</span><br><span class="line">Out[4]: 1715986138896</span><br><span class="line"></span><br><span class="line">In [5]: id(num2)</span><br><span class="line">Out[5]: 1715986138896</span><br><span class="line"></span><br><span class="line"># String</span><br><span class="line">In [7]: str1 = &apos;python&apos;</span><br><span class="line"></span><br><span class="line">In [8]: str2 = copy.copy(str1)</span><br><span class="line"></span><br><span class="line">In [9]: id(str1)</span><br><span class="line">Out[9]: 1715956310400</span><br><span class="line"></span><br><span class="line">In [10]: id(str2)</span><br><span class="line">Out[10]: 1715956310400</span><br><span class="line"></span><br><span class="line"># Tuple</span><br><span class="line">In [11]: tup1 = (18, &apos;tom&apos;)</span><br><span class="line"></span><br><span class="line">In [12]: tup2 = copy.copy(tup1)</span><br><span class="line"></span><br><span class="line">In [13]: id(tup1)</span><br><span class="line">Out[13]: 1715986376584</span><br><span class="line"></span><br><span class="line">In [14]: id(tup2)</span><br><span class="line">Out[14]: 1715986376584</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于<strong>不可变</strong>类型，浅拷贝仅仅是地址指向，不会开辟新的空间。</p>
+</blockquote>
+<p><strong>2. 可变类型List、Dictionary、Set</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"># Set</span><br><span class="line">In [19]: set1 = &#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">In [20]: set2 = copy.copy(set1)</span><br><span class="line"></span><br><span class="line">In [21]: id(set1)</span><br><span class="line">Out[21]: 1715986882856</span><br><span class="line"></span><br><span class="line">In [22]: id(set2)</span><br><span class="line">Out[22]: 1715985718632</span><br><span class="line"></span><br><span class="line">In [23]: set1 = &#123;1, 2, 3, 5&#125;</span><br><span class="line"></span><br><span class="line">In [24]: id(set1)</span><br><span class="line">Out[24]: 1715986883304</span><br><span class="line"></span><br><span class="line">In [25]: set2</span><br><span class="line">Out[25]: &#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">In [26]: id(set2)</span><br><span class="line">Out[26]: 1715985718632</span><br><span class="line"></span><br><span class="line"># Dictionary</span><br><span class="line">In [63]: friends = [&apos;GuanYu&apos;, &apos;ZhangFei&apos;]</span><br><span class="line"></span><br><span class="line">In [64]: dict1 = &#123;&apos;name&apos;: &apos;Liubei&apos;, &apos;age&apos;: 22, &apos;friends&apos;: friends&#125;</span><br><span class="line"></span><br><span class="line">In [65]: dict2 = copy.copy(dict1)</span><br><span class="line"></span><br><span class="line">In [66]: dict2</span><br><span class="line">Out[66]: &#123;&apos;name&apos;: &apos;Liubei&apos;, &apos;age&apos;: 22, &apos;friends&apos;: [&apos;GuanYu&apos;, &apos;ZhangFei&apos;]&#125;</span><br><span class="line"></span><br><span class="line">In [67]: id(dict1)</span><br><span class="line">Out[67]: 1715986134792</span><br><span class="line"></span><br><span class="line">In [68]: id(dict2)</span><br><span class="line">Out[68]: 1715986136952</span><br><span class="line"></span><br><span class="line">In [69]: dict1[&apos;name&apos;] = &apos;LiuXuande&apos;</span><br><span class="line"></span><br><span class="line">In [70]: dict2</span><br><span class="line">Out[70]: &#123;&apos;name&apos;: &apos;Liubei&apos;, &apos;age&apos;: 22, &apos;friends&apos;: [&apos;GuanYu&apos;, &apos;ZhangFei&apos;]&#125;</span><br><span class="line"></span><br><span class="line">In [71]: friends[0] = &apos;GuanYunChang&apos;</span><br><span class="line"></span><br><span class="line">In [72]: dict2</span><br><span class="line">Out[72]: &#123;&apos;name&apos;: &apos;Liubei&apos;, &apos;age&apos;: 22, &apos;friends&apos;: [&apos;GuanYunChang&apos;, &apos;ZhangFei&apos;]&#125;</span><br><span class="line"></span><br><span class="line"># List</span><br><span class="line">In [73]: friends = [&apos;GuanYu&apos;, &apos;ZhangFei&apos;]</span><br><span class="line"></span><br><span class="line">In [74]: friends1 = [&apos;GuanYu&apos;, &apos;ZhangFei&apos;]</span><br><span class="line"></span><br><span class="line">In [75]: friends2 = copy.copy(friends1)</span><br><span class="line"></span><br><span class="line">In [76]: id(friends1)</span><br><span class="line">Out[76]: 1715986731144</span><br><span class="line"></span><br><span class="line">In [77]: id(friends2)</span><br><span class="line">Out[77]: 1715986611720</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 总结</strong></p>
+<blockquote>
+<ol>
+<li>对于<strong>不可变</strong>类型Number、String、Tuple，浅拷贝仅仅只是地址指向，不会开辟新的空间。</li>
+<li>对于<strong>可变</strong>类型List、Set、Dictionary，浅拷贝会开辟新的地址空间（仅仅是最顶层开辟了新的地址，里层元素的地址还是一样的）。</li>
+<li>浅拷贝后，改变原始对象中不可变类型中元素的值时，不会影响拷贝对象；改变原始对象中可变类型中元素的值时，会同时影响拷贝对象。（操作拷贝对象同理）</li>
+</ol>
+</blockquote>
+<h3 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h3><blockquote>
+<p>使用copy 模块中的deepcopy方法实现浅拷贝</p>
+</blockquote>
+<p>*<em>1.不可变类型 Number、String、Tuple *</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">num1 = 17</span><br><span class="line">num2 = copy.deepcopy(num1)</span><br><span class="line">print(&quot;num1:&quot; + str(id(num1)))  # num1:140734643496272</span><br><span class="line">print(&quot;num2:&quot; + str(id(num1)))  # num2:140734643496272</span><br><span class="line"></span><br><span class="line">str1 = &quot;hello&quot;</span><br><span class="line">str2 = copy.deepcopy(str1)</span><br><span class="line">print(&quot;str1:&quot; + str(id(str1)))  # str1:2374732424616</span><br><span class="line">print(&quot;str2:&quot; + str(id(str2)))  # str2:2374732424616</span><br><span class="line"></span><br><span class="line">tup1 = (18, &quot;Tom&quot;)</span><br><span class="line">tup2 = copy.deepcopy(tup1)</span><br><span class="line">print(&quot;tup1:&quot; + str(id(tup1)))  # tup1:2374732415240</span><br><span class="line">print(&quot;tup2:&quot; + str(id(tup2)))  # tup2:2374732415240</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.可变类型List、Dictionary、Set</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># List</span><br><span class="line">list1 = [&apos;ZhangFei&apos;, &apos;LuiBei&apos;]</span><br><span class="line">list2 = copy.deepcopy(list1)</span><br><span class="line">print(&quot;list1:&quot; + str(id(list1)))  # list1:3132302390024</span><br><span class="line">print(&quot;list2:&quot; + str(id(list2)))  # list2:3132302379848</span><br><span class="line"></span><br><span class="line"># Dict</span><br><span class="line">dic1 = dic1 = &#123;&apos;name&apos;: &apos;Liubei&apos;, &apos;age&apos;: 22&#125;</span><br><span class="line">dic2 = copy.deepcopy(dic1)</span><br><span class="line">print(&quot;dic1:&quot; + str(id(dic1)))  # dic1:3132272508072</span><br><span class="line">print(&quot;dic2:&quot; + str(id(dic2)))  # dic2:3132302335936</span><br><span class="line"></span><br><span class="line"># Set</span><br><span class="line">set1 = &#123;&quot;A&quot;,&quot;B&quot;&#125;</span><br><span class="line">set2 = copy.deepcopy(set1)</span><br><span class="line">print(&quot;set1:&quot; + str(id(set1)))  # set1:3132302339432</span><br><span class="line">print(&quot;set2:&quot; + str(id(set2)))  # set2:3132302339656</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.深拷贝会对子元素也进行拷贝（在之前的浅拷贝中，子元素是不会开辟新空间做拷贝的。）</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">list1 = [1, 2]</span><br><span class="line">list2 = [3, 4]</span><br><span class="line">num = 666</span><br><span class="line"></span><br><span class="line">list3 = [list1, list2, num]</span><br><span class="line">new_list3 = copy.deepcopy(list3)</span><br><span class="line"></span><br><span class="line">list3[1] = [113, 114]</span><br><span class="line">new_list3[2] = [223, 224]</span><br><span class="line"></span><br><span class="line">print(&quot;list3: %s&quot; % list3)</span><br><span class="line">print(&apos;new_list3: %s&apos; % new_list3)</span><br><span class="line">list3: [[1, 2], [113, 114], 666]</span><br><span class="line">new_list3: [[1, 2], [3, 4], [223, 224]]</span><br><span class="line"></span><br><span class="line">print(&quot;id list3:&quot; + str(id(list3)))</span><br><span class="line">print(&quot;id list3[0]:&quot; + str(id(list3[0])))</span><br><span class="line">print(&quot;id list3[1]:&quot; + str(id(list3[1])))</span><br><span class="line">print(&quot;id list3[2]:&quot; + str(id(list3[2])))</span><br><span class="line">id list3: 2324638103112</span><br><span class="line">id list3[0]: 2324637971656</span><br><span class="line">id list3[1]: 2324638102920</span><br><span class="line">id list3[2]: 2324636231152</span><br><span class="line"></span><br><span class="line">print(&quot;id new_list3:&quot; + str(id(new_list3)))</span><br><span class="line">print(&quot;id new_list3[0]:&quot; + str(id(new_list3[0])))</span><br><span class="line">print(&quot;id new_list3[1]:&quot; + str(id(new_list3[1])))</span><br><span class="line">print(&quot;id new_list3[2]:&quot; + str(id(new_list3[2])))</span><br><span class="line">id new_list3[0]: 2324638102856</span><br><span class="line">id new_list3[1]: 2324638102728</span><br><span class="line">id new_list3[2]: 2324638103048</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 总结</strong></p>
+<blockquote>
+<ol>
+<li>深拷贝，除了顶层拷贝，还对子元素也进行了拷贝</li>
+<li>经过深拷贝后，原始对象和拷贝对象中所有的元素地址都不在有相同的</li>
+</ol>
+</blockquote>
+<h3 id="其他拷贝方式"><a href="#其他拷贝方式" class="headerlink" title="其他拷贝方式"></a>其他拷贝方式</h3><p><strong>1.使用分片表达式进行拷贝</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">list1 = [1, 2]</span><br><span class="line">list2 = [3, 4]</span><br><span class="line">num = 666</span><br><span class="line"></span><br><span class="line">list3 = [list1, list2, num]</span><br><span class="line"></span><br><span class="line">new_list3 = list3[:]</span><br><span class="line"></span><br><span class="line">print(&quot;list3: &quot;+str(id(list3)))</span><br><span class="line">print(&quot;list3[0]: &quot;+str(id(list3[0])))</span><br><span class="line">print(&quot;list3[1]: &quot;+str(id(list3[1])))</span><br><span class="line">print(&quot;list3[2]: &quot;+str(id(list3[2])))</span><br><span class="line">list3: 2429014537800</span><br><span class="line">list3[0]: 2429014405960</span><br><span class="line">list3[1]: 2429014395720</span><br><span class="line">list3[2]: 2428984288752</span><br><span class="line"></span><br><span class="line">print(&quot;new_list3: &quot;+str(id(new_list3)))</span><br><span class="line">print(&quot;new_list3[0]: &quot;+str(id(new_list3[0])))</span><br><span class="line">print(&quot;new_list3[1]: &quot;+str(id(new_list3[1])))</span><br><span class="line">print(&quot;new_list3[2]: &quot;+str(id(new_list3[2])))</span><br><span class="line">new_list3: 2429014537864</span><br><span class="line">new_list3[0]: 2429014405960</span><br><span class="line">new_list3[1]: 2429014395720</span><br><span class="line">new_list3[2]: 2428984288752</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 字典的copy方法可以拷贝一个字典</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">dic1 = &#123;&quot;name&quot;: &quot;LiuBei&quot;, &quot;num&quot;: 18&#125;</span><br><span class="line"></span><br><span class="line">dic2 = dic1.copy()</span><br><span class="line"></span><br><span class="line">dic1[&quot;name&quot;] = &quot;GuanYu&quot;</span><br><span class="line">dic2[&quot;name&quot;] = &quot;ZhangFei&quot;</span><br><span class="line"></span><br><span class="line">print(dic1)  # &#123;&apos;name&apos;: &apos;GuanYu&apos;, &apos;num&apos;: 18&#125;</span><br><span class="line">print(&quot;dic1:&quot; + str(id(dic1)))  # dic1:1558477372584</span><br><span class="line"></span><br><span class="line">print(dic2)  # &#123;&apos;name&apos;: &apos;ZhangFei&apos;, &apos;num&apos;: 18&#125;</span><br><span class="line">print(&quot;dic2:&quot; + str(id(dic2)))  # dic2:1558477372656</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/18/XML/" rel="next" title="XML">
+                  <i class="fa fa-chevron-left"></i> XML
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/18/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%A8%A1%E5%BC%8F/" rel="prev" title="网络应用模式">
+                  网络应用模式 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#浅拷贝和深拷贝的区别和理解"><span class="nav-number">1.</span> <span class="nav-text">浅拷贝和深拷贝的区别和理解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的数据类型"><span class="nav-number">1.1.</span> <span class="nav-text">python中的数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浅拷贝"><span class="nav-number">1.2.</span> <span class="nav-text">浅拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深拷贝"><span class="nav-number">1.3.</span> <span class="nav-text">深拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他拷贝方式"><span class="nav-number">1.4.</span> <span class="nav-text">其他拷贝方式</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

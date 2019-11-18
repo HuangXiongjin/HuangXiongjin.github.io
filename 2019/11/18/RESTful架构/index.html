@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="REST介绍REST起源 REST（Representational State Transfer）表述性状态转移，基于HTTP、URI、XML、JSON等标准和协议，支持轻量级、跨平台、跨语言的架构设计。是Web服务的一种架构风格（一种思想）。 REST指的是一组架构约束条件和原则，如果一个架构符合REST的约束条件和原则，就称它为RESTful架构。  什么是轻量级 web框架可以分为基于请求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RESTful架构">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;18&#x2F;RESTful%E6%9E%B6%E6%9E%84&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="REST介绍REST起源 REST（Representational State Transfer）表述性状态转移，基于HTTP、URI、XML、JSON等标准和协议，支持轻量级、跨平台、跨语言的架构设计。是Web服务的一种架构风格（一种思想）。 REST指的是一组架构约束条件和原则，如果一个架构符合REST的约束条件和原则，就称它为RESTful架构。  什么是轻量级 web框架可以分为基于请求">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-11T12:47:49.834Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/11/18/RESTful%E6%9E%B6%E6%9E%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>RESTful架构 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/18/RESTful%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            RESTful架构
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-18 09:13:51" itemprop="dateCreated datePublished" datetime="2019-11-18T09:13:51+08:00">2019-11-18</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-11 20:47:49" itemprop="dateModified" datetime="2019-11-11T20:47:49+08:00">2019-11-11</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="REST介绍"><a href="#REST介绍" class="headerlink" title="REST介绍"></a>REST介绍</h3><h4 id="REST起源"><a href="#REST起源" class="headerlink" title="REST起源"></a>REST起源</h4><blockquote>
+<p>REST（Representational State Transfer）表述性状态转移，基于HTTP、URI、XML、JSON等标准和协议，支持轻量级、跨平台、跨语言的架构设计。是Web服务的一种架构风格（一种思想）。</p>
+<p>REST指的是一组架构约束条件和原则，如果一个架构符合REST的约束条件和原则，就称它为RESTful架构。</p>
+</blockquote>
+<h4 id="什么是轻量级"><a href="#什么是轻量级" class="headerlink" title="什么是轻量级"></a>什么是轻量级</h4><blockquote>
+<p>web框架可以分为基于请求的（request-based）和基于组件的（component-based）两大阵营。前者的代表有Struts和Spring MVC等，后者的成员则有JSF、Tapestry等等。</p>
+<p>轻量级框架一般是由Struts , Spring组成的，侧重于减小开发的复杂度，但是相应的它的处理能力便有所减弱（如事务功能减弱，不具备分布式处理能力），比较适用于开发中小型企业应用。</p>
+<p>轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁session的对象；重量级意味着不能随便的创建和销毁它的实例，会占用很多资源。</p>
+</blockquote>
+<h4 id="REST架构的主要原则"><a href="#REST架构的主要原则" class="headerlink" title="REST架构的主要原则"></a>REST架构的主要原则</h4><ul>
+<li>对网络上所有的资源都有一个资源标识符（URI）</li>
+<li>对资源的操作不会改变该资源标识符</li>
+<li>同一种资源有多种表现形式（XML，JSON）</li>
+<li>所有的操纵都是无状态的（stateless）</li>
+</ul>
+<p><em>符合上述REST原则的架构方式就称为RESTful架构</em></p>
+<h4 id="URI和URL的区别"><a href="#URI和URL的区别" class="headerlink" title="URI和URL的区别"></a>URI和URL的区别</h4><blockquote>
+<p>URI（uniform resource identifier）统一资源标识符，用来唯一标识一个资源，Web上的每种资源如HTML文档、图片、视频等都是由一个URI来定位的。</p>
+<p>URI一般由三部分组成：</p>
+<ol>
+<li>访问资源的命名机制</li>
+<li>存放资源的主机名</li>
+<li>资源自身的名称，由路径标识，着重强调资源</li>
+</ol>
+<p>URL（uniform resource locator）统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源而且还指明了如何定位（查找）这个资源。</p>
+</blockquote>
+<h3 id="RESTful介绍"><a href="#RESTful介绍" class="headerlink" title="RESTful介绍"></a>RESTful介绍</h3><blockquote>
+<ol>
+<li><p>RESTful是一种常见的REST应用，是遵循REST风格的web服务，REST式的web服务是一种ROA（面向资源的架构）。</p>
+</li>
+<li><p>RESTful是一种软件架构风格、设计风格，而不是标准</p>
+</li>
+<li><p>所有的东西都是资源，所有的操作都通过对资源的增删改查</p>
+</li>
+<li><p>对资源的增删改查对应的URL的操作（POST,DELETE,PUT,GET）</p>
+</li>
+<li><p>无状态的（不能使用session）</p>
+</li>
+<li><p>URL命名<br>a）/资源<br>b）/资源名称/{资源ID}<br>c）/资源名称/{资源ID}/子资源名称</p>
+<p>d）/资源名称/{资源ID}/子资源名称/{子资源ID}</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="RESTful资源操作"><a href="#RESTful资源操作" class="headerlink" title="RESTful资源操作"></a>RESTful资源操作</h4><table>
+<thead>
+<tr>
+<th align="center">http方法</th>
+<th align="center">资源操作</th>
+<th align="center">幂等</th>
+<th align="center">安全</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GET</td>
+<td align="center">SELECT</td>
+<td align="center">是</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">POST</td>
+<td align="center">INSERT</td>
+<td align="center">否</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">PUT</td>
+<td align="center">UPDATE</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">DELETE</td>
+<td align="center">是</td>
+<td align="center">否</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>幂等性：对同一个REST接口多次访问，得到的资源状态是相同的。</p>
+<p>安全性：对该REST接口的访问，不会使服务器的状态发生改变。</p>
+</blockquote>
+<h4 id="传统的URL请求格式"><a href="#传统的URL请求格式" class="headerlink" title="传统的URL请求格式"></a>传统的URL请求格式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/user/query/1 　GET 根据用户id查询用户数据</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user/save 　POST 新增用户</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user/update 　POST 修改用户信息</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user/delete 　GET/POST 删除用户信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="RESTful请求格式"><a href="#RESTful请求格式" class="headerlink" title="RESTful请求格式"></a>RESTful请求格式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/user/1　GET 根据用户id查询用户数据</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user 　POST 新增用户</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user 　PUT 修改用户信息</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/user 　DELETE 删除用户信息</span><br></pre></td></tr></table></figure>
+
+<h4 id="接口分类"><a href="#接口分类" class="headerlink" title="接口分类"></a>接口分类</h4><h5 id="１．HTTP-Methods"><a href="#１．HTTP-Methods" class="headerlink" title="１．HTTP　Methods"></a>１．HTTP　Methods</h5><table>
+<thead>
+<tr>
+<th align="center">HTTP Operation</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">GET</td>
+<td align="center">查找</td>
+</tr>
+<tr>
+<td align="center">POST</td>
+<td align="center">增加</td>
+</tr>
+<tr>
+<td align="center">PUT</td>
+<td align="center">更新</td>
+</tr>
+<tr>
+<td align="center">PATCH</td>
+<td align="center">部分更新</td>
+</tr>
+<tr>
+<td align="center">DELETE</td>
+<td align="center">删除</td>
+</tr>
+</tbody></table>
+<h5 id="2-接口分类"><a href="#2-接口分类" class="headerlink" title="2. 接口分类"></a>2. 接口分类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">资源对象的CRUD操作</span><br><span class="line">GET http://api/users          #获取trades列表</span><br><span class="line">GET http://api/users/&#123;id&#125;     #根据id获取单个user</span><br><span class="line">POST http://api/users         #创建user</span><br><span class="line">PUT http://api/users/&#123;id&#125;     #根据id更新user</span><br><span class="line">PATCH http://api/users/&#123;id&#125;    #根据id部分更新user</span><br><span class="line">DELETE http://api/users/&#123;id&#125;  #根据id删除user</span><br></pre></td></tr></table></figure>
+
+<h4 id="响应设计"><a href="#响应设计" class="headerlink" title="响应设计"></a>响应设计</h4><blockquote>
+<p>原则：数据接收到即可使用，无需拆箱</p>
+<p><strong>1、什么是装箱？什么是拆箱？</strong></p>
+<p>装箱：基本类型转变为包装器类型的过程。<br>拆箱：包装器类型转变为基本类型的过程。</p>
+<p><strong>2、装箱和拆箱的执行过程？</strong></p>
+<ul>
+<li>装箱是通过调用包装器类的 valueOf 方法实现的</li>
+<li>拆箱是通过调用包装器类的 xxxValue 方法实现的，xxx代表对应的基本数据类型。</li>
+<li>如int装箱的时候自动调用Integer的valueOf(int)方法；Integer拆箱的时候自动调用Integer的intValue方法。</li>
+</ul>
+</blockquote>
+<p><strong>在一次请求中，content body仅仅用于传输数据，Header中存放描述请求或请求的元数据</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">错误做法</span><br><span class="line">&#123;</span><br><span class="line">	&quot;status&quot;: 200,</span><br><span class="line">	&quot;data&quot;: &#123;</span><br><span class="line">		&quot;user_id&quot;: 1001,</span><br><span class="line">		&quot;user_name&quot;: &quot;张飞&quot;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">正确的做法</span><br><span class="line">Response Headers:</span><br><span class="line">	Status: 200</span><br><span class="line">Response Body:</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;user_id&quot;: 1001,</span><br><span class="line">        &quot;user_name&quot;: &quot;张飞&quot;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/18/HTTP%E5%8D%8F%E8%AE%AE/" rel="next" title="HTTP协议">
+                  <i class="fa fa-chevron-left"></i> HTTP协议
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/18/XML/" rel="prev" title="XML">
+                  XML <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#REST介绍"><span class="nav-number">1.</span> <span class="nav-text">REST介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#REST起源"><span class="nav-number">1.1.</span> <span class="nav-text">REST起源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是轻量级"><span class="nav-number">1.2.</span> <span class="nav-text">什么是轻量级</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REST架构的主要原则"><span class="nav-number">1.3.</span> <span class="nav-text">REST架构的主要原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URI和URL的区别"><span class="nav-number">1.4.</span> <span class="nav-text">URI和URL的区别</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RESTful介绍"><span class="nav-number">2.</span> <span class="nav-text">RESTful介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RESTful资源操作"><span class="nav-number">2.1.</span> <span class="nav-text">RESTful资源操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#传统的URL请求格式"><span class="nav-number">2.2.</span> <span class="nav-text">传统的URL请求格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RESTful请求格式"><span class="nav-number">2.3.</span> <span class="nav-text">RESTful请求格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#接口分类"><span class="nav-number">2.4.</span> <span class="nav-text">接口分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#１．HTTP-Methods"><span class="nav-number">2.4.1.</span> <span class="nav-text">１．HTTP　Methods</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-接口分类"><span class="nav-number">2.4.2.</span> <span class="nav-text">2. 接口分类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#响应设计"><span class="nav-number">2.5.</span> <span class="nav-text">响应设计</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
