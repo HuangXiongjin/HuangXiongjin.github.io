@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="摘要算法简介 Python的hashlib提供了常见的摘要算法，如MD5、SHA1等等。 摘要算法又称哈希算法、散列算法，它通过一个函数，把任意长度的数据转换为一个长度固定的数据串，通常用16进制的字符串表示。 摘要算法之所以能指出数据是否被篡改过，就是因为摘要函数是一个单向函数，计算f(data)很容易，但通过digest反推data却非常困难。而且，对原始数据做一个bit的修改，都会导致计算出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python常见算法">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;24&#x2F;Python%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="摘要算法简介 Python的hashlib提供了常见的摘要算法，如MD5、SHA1等等。 摘要算法又称哈希算法、散列算法，它通过一个函数，把任意长度的数据转换为一个长度固定的数据串，通常用16进制的字符串表示。 摘要算法之所以能指出数据是否被篡改过，就是因为摘要函数是一个单向函数，计算f(data)很容易，但通过digest反推data却非常困难。而且，对原始数据做一个bit的修改，都会导致计算出">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-24T05:35:19.248Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/11/24/Python%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Python常见算法 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/24/Python%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            Python常见算法
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-24 22:19:25 / 修改时间：13:35:19" itemprop="dateCreated datePublished" datetime="2019-11-24T22:19:25+08:00">2019-11-24</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="摘要算法简介"><a href="#摘要算法简介" class="headerlink" title="摘要算法简介"></a>摘要算法简介</h3><blockquote>
+<p>Python的hashlib提供了常见的摘要算法，如MD5、SHA1等等。</p>
+<p>摘要算法又称哈希算法、散列算法，它通过一个函数，把任意长度的数据转换为一个长度固定的数据串，通常用16进制的字符串表示。</p>
+<p>摘要算法之所以能指出数据是否被篡改过，就是因为摘要函数是一个单向函数，计算<code>f(data)</code>很容易，但通过<code>digest</code>反推<code>data</code>却非常困难。而且，对原始数据做一个bit的修改，都会导致计算出的摘要完全不同。</p>
+</blockquote>
+<h3 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h3><blockquote>
+<p>MD5消息摘要算法(Message Digest Algorithm)，一种被广泛使用的密码散列函数，可以产生一个128位（16字节）的散列值（hash value）。</p>
+</blockquote>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><p><strong>认识hash.update()的作用:如果数据量很大，可以分块多次调用<code>update()</code>，最后计算的结果是一样的</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 示例一</span><br><span class="line">1&gt;&gt;&gt; import hashlib</span><br><span class="line">2&gt;&gt;&gt; md5 = hashlib.md5()</span><br><span class="line">3&gt;&gt;&gt; md5.update(&apos;123&apos;.encode())</span><br><span class="line">4&gt;&gt;&gt; print(md5.hexdigest())</span><br><span class="line">202cb962ac59075b964b07152d234b70</span><br><span class="line">5&gt;&gt;&gt; md5.update(&apos;123&apos;.encode())</span><br><span class="line">6&gt;&gt;&gt; print(md5.hexdigest())</span><br><span class="line">4297f44b13955235245b2497399d7a93  # 发现两次对123加密的结果不一样</span><br><span class="line"></span><br><span class="line">1&gt;&gt;&gt; md5=hashlib.md5()        # 重新定义md5</span><br><span class="line">2&gt;&gt;&gt; md5.update(&apos;123123&apos;.encode())</span><br><span class="line">3&gt;&gt;&gt; print(md5.hexdigest())</span><br><span class="line">4297f44b13955235245b2497399d7a93  # 发现加密123123和上面的结果一样就验证了md5.update是拼接的效果</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 示例2</span><br><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">md5 = hashlib.md5()</span><br><span class="line">md5.update(&apos;how to use md5 in python hashlib?&apos;)</span><br><span class="line">print md5.hexdigest()  # d26a53750bc40b38b65a520292f69306</span><br><span class="line"></span><br><span class="line">md5 = hashlib.md5()</span><br><span class="line">md5.update(&apos;how to use md5 in &apos;)</span><br><span class="line">md5.update(&apos;python hashlib?&apos;)</span><br><span class="line">print md5.hexdigest()  # d26a53750bc40b38b65a520292f69306</span><br><span class="line"></span><br><span class="line">以上都是对于英文进行加密，如果对中文按以上方法加密，会出现错误，原因在于字符编码问题上。中文加密如下</span><br><span class="line">data = ‘你好’</span><br><span class="line">hashlib.md5(data.endode(encoding=&quot;utf-8&quot;)).hexdigest()</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例一：密码加密与验证</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def pwd_encrypt(password):</span><br><span class="line">    &quot;&quot;&quot;加密&quot;&quot;&quot;</span><br><span class="line">    md5 = hashlib.md5()</span><br><span class="line">    md5.update(password.encode(&apos;utf-8&apos;))</span><br><span class="line">    result = md5.hexdigest()  # 返回16进制的数据字符串</span><br><span class="line">    return result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def pwd_check(pw1, pw2):</span><br><span class="line">    &quot;&quot;&quot;校验数据&quot;&quot;&quot;</span><br><span class="line">    if pwd_encrypt(pw1) == pwd_encrypt(pw2):</span><br><span class="line">        return 1</span><br><span class="line">    else:</span><br><span class="line">        return 2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(pwd_check(&apos;123456&apos;, &apos;1234567&apos;))</span><br><span class="line">print(pwd_check(&apos;123456&apos;, &apos;123456&apos;))</span><br></pre></td></tr></table></figure>
+
+<p><strong>示例2：验证文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">m = hashlib.md5()</span><br><span class="line">src = &apos;I like Python&apos;  # 假设文件内容</span><br><span class="line">m.update(src.encode(&apos;utf-8&apos;))</span><br><span class="line">print(m.hexdigest())  # 17008b7417701b0c233b999d20c13f1d</span><br><span class="line"></span><br><span class="line"># 假设现有有两个文件，我们需要验证这两个文件是否一样</span><br><span class="line">def out_md5(src): # 简单封装 </span><br><span class="line">	m = hashlib.md5() </span><br><span class="line">	m.update(src.encode(&apos;utf-8&apos;)) </span><br><span class="line">	return m.hexdigest()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def check():</span><br><span class="line">    with open(&apos;1.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">        src = f.read() </span><br><span class="line">        m1 = out_md5(src) </span><br><span class="line">        print(m1)</span><br><span class="line"></span><br><span class="line">    with open(&apos;2.txt&apos;, &apos;r&apos;) as f:</span><br><span class="line">        src = f.read() </span><br><span class="line">        m2 = out_md5(src)</span><br><span class="line">        print(m2)</span><br><span class="line"></span><br><span class="line">    if m1 == m2:</span><br><span class="line">        print(True)</span><br><span class="line">    else: </span><br><span class="line">        print(False)</span><br></pre></td></tr></table></figure>
+
+<p><strong>加密是添加SALT</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#md5加密是不可反解的</span><br><span class="line">import hashlib</span><br><span class="line">#实例化对象</span><br><span class="line">obj=hashlib.md5()      #先创建一个md5的对象</span><br><span class="line">#写入要加密的字节</span><br><span class="line">obj.update(&quot;admin&quot;.encode(&quot;utf-8&quot;))   #对谁加密就把谁写道前面，python3中必须是字节,所以必须用.encode()</span><br><span class="line">#获取密文</span><br><span class="line">secret=obj.hexdigest()</span><br><span class="line">print(secret)</span><br><span class="line">##############################################################</span><br><span class="line"> </span><br><span class="line">import hashlib</span><br><span class="line">obj=hashlib.md5(b&apos;12334&apos;)                #实例化md5的时候可以给传个参数，这叫加盐</span><br><span class="line">obj.update(&quot;admin&quot;.encode(&quot;utf-8&quot;))      #是再加密的时候传入自己的一块字节，</span><br><span class="line">secret=obj.hexdigest()</span><br><span class="line">print(secret)</span><br><span class="line">##############################################################</span><br><span class="line"> </span><br><span class="line">#因为用户密码已经被加密过了，而且是加盐的，所以再用户验证的时候用字符串或者直接的加密的的字节都不能正确判断，只能用加盐的字节所判断</span><br><span class="line"> </span><br><span class="line">import hashlib</span><br><span class="line">SALT = b&apos;2erer3asdfwerxdf34sdfsdfs90&apos;</span><br><span class="line">def md5(pwd):</span><br><span class="line">    # 实例化对象</span><br><span class="line">    obj = hashlib.md5(SALT)</span><br><span class="line">    # 写入要加密的字节</span><br><span class="line">    obj.update(pwd.encode(&apos;utf-8&apos;))</span><br><span class="line">    # 获取密文</span><br><span class="line">    return obj.hexdigest()</span><br><span class="line"> </span><br><span class="line">user = input(&quot;请输入用户名:&quot;)</span><br><span class="line">pwd = input(&quot;请输入密码:&quot;)</span><br><span class="line">if user == &apos;oldboy&apos; and md5(pwd) == &apos;c5395258d82599e5f1bec3be1e4dea4a&apos;:</span><br><span class="line">    print(&apos;登录成功&apos;)</span><br><span class="line">else:</span><br><span class="line">    print(&apos;登录失败&apos;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SHA1"><a href="#SHA1" class="headerlink" title="SHA1"></a>SHA1</h3><blockquote>
+<p>SHA1(Secure Hash Algorithm 1) 安全散列算法1，是一种密码散列函数。SHA-1可以生成一个被称为消息摘要的160位(20字节)散列值，散列值通常的呈现形式为40个十六进制数。</p>
+<p>比SHA1更安全的算法是SHA256和SHA512，不过越安全的算法越慢，而且摘要长度更长。</p>
+</blockquote>
+<p><strong>调用与MD5完全类似</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line">sha1 = hashlib.sha1()</span><br><span class="line">sha1.update(&apos;how to use sha1 in &apos;)</span><br><span class="line">sha1.update(&apos;python hashlib?&apos;)</span><br><span class="line">print sha1.hexdigest()</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/18/%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="next" title="序列化和反序列化">
+                  <i class="fa fa-chevron-left"></i> 序列化和反序列化
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#摘要算法简介"><span class="nav-number">1.</span> <span class="nav-text">摘要算法简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MD5"><span class="nav-number">2.</span> <span class="nav-text">MD5</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用方法"><span class="nav-number">2.1.</span> <span class="nav-text">使用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SHA1"><span class="nav-number">3.</span> <span class="nav-text">SHA1</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
