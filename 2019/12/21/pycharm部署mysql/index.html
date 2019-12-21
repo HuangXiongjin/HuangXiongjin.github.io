@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1pymasql获取的数据库连接对象并不是线程安全的（在多线程环境下会出错）如果希望每个线程都持有自己的资源避免因为资源竞争导致的加锁排队，可以使用treading模块的local类来是实现讲资源跟线程绑定，让每个线程持有自己的资源    先完成pycharm配置环境的操作(见Linux文件夹中的pycharm环境配置)  准备mysql环境  下载MySQL需要的包：Terminal: pip">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pycharm部署mysql">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;21&#x2F;pycharm%E9%83%A8%E7%BD%B2mysql&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="1pymasql获取的数据库连接对象并不是线程安全的（在多线程环境下会出错）如果希望每个线程都持有自己的资源避免因为资源竞争导致的加锁排队，可以使用treading模块的local类来是实现讲资源跟线程绑定，让每个线程持有自己的资源    先完成pycharm配置环境的操作(见Linux文件夹中的pycharm环境配置)  准备mysql环境  下载MySQL需要的包：Terminal: pip">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-16T14:45:46.875Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/12/21/pycharm%E9%83%A8%E7%BD%B2mysql/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>pycharm部署mysql | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/21/pycharm%E9%83%A8%E7%BD%B2mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            pycharm部署mysql
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-21 11:07:51" itemprop="dateCreated datePublished" datetime="2019-12-21T11:07:51+08:00">2019-12-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-16 22:45:46" itemprop="dateModified" datetime="2019-12-16T22:45:46+08:00">2019-12-16</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pymasql获取的数据库连接对象并不是线程安全的（在多线程环境下会出错）如果希望每个线程都持有自己的资源避免因为资源竞争导致的加锁排队，可以使用treading模块的local类来是实现讲资源跟线程绑定，让每个线程持有自己的资源</span><br></pre></td></tr></table></figure>
+
+
+<ol>
+<li><p>先完成pycharm配置环境的操作(见Linux文件夹中的pycharm环境配置)</p>
+</li>
+<li><p>准备mysql环境</p>
+<ul>
+<li>下载MySQL需要的包：Terminal: pip install pymysql -i <a href="https://pypi.doubanio.com/simple" target="_blank" rel="noopener">https://pypi.doubanio.com/simple</a></li>
+<li>读取并下载依赖项：pip install -r requirements.txt</li>
+<li>上传项目之前需要导出依赖项：pip freeze &gt; retuqirements.txt</li>
+</ul>
+</li>
+<li><p>连接数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第一步：指定主机、端口、用户名、口令、数据库、字符集创建连接</span><br><span class="line">第二步：通过连接对象的cursor方法获取游标对象</span><br><span class="line">第三步：通过游标对象的execute方法向数据库发送SQL</span><br><span class="line">第四步：所有的操作都成功就提交；出现错误就回滚（撤销）</span><br><span class="line">第五步：关闭连接释放资源</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>增加操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">no = input(&quot;部门编号：&quot;)</span><br><span class="line">name = input(&quot;部门名称：&quot;)</span><br><span class="line">location = input(&quot;部门所在地：&quot;)</span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;****&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;</span><br><span class="line">                       )</span><br><span class="line">try:</span><br><span class="line">    with conn.cursor() as cursor:</span><br><span class="line">        # 这里的%s不是python中的字符串占位符，而是安全的占位符。</span><br><span class="line">        result = cursor.execute(&apos;insert into tb_dept values (%s, %s,%s)&apos;,(no,name,location))</span><br><span class="line">        result = cursor.execute(&apos;delete from tb_dept where dno=%s&apos;, (no, ))</span><br><span class="line">        if result == 1:  # result不为空</span><br><span class="line">            print(&quot;添加成功！！&quot;)</span><br><span class="line">    conn.commit()</span><br><span class="line">except pymysql.MySQLError as err:</span><br><span class="line">    print(err)</span><br><span class="line">    conn.rollback()</span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;批处理插入，提高效率&quot;&quot;&quot;</span><br><span class="line">import json</span><br><span class="line"></span><br><span class="line">import pymysql</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;******&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;)</span><br><span class="line">try:</span><br><span class="line">    for page in range(1, 11):</span><br><span class="line">        resp = requests.get(f&apos;http://api.tianapi.com/topnews/?key=9aeb28ee8858a167c1755f856f830e22&amp;page=&#123;page&#125;&amp;num=10&apos;)</span><br><span class="line">        newslist = json.loads(resp.text)[&apos;newslist&apos;]</span><br><span class="line">        params = []</span><br><span class="line">        for news in newslist:</span><br><span class="line">            params.append((news[&apos;title&apos;], news[&apos;description&apos;], news[&apos;url&apos;], news[&apos;source&apos;], news[&apos;ctime&apos;]))</span><br><span class="line">        with conn.cursor() as cursor:</span><br><span class="line">            # 执行批处理（将多个insert操作合成一条SQL发给数据库）</span><br><span class="line">            cursor.executemany(</span><br><span class="line">                &apos;insert into tb_news (title, description, url, source, ctime) values (%s, %s, %s, %s, %s)&apos;,</span><br><span class="line">                params</span><br><span class="line">            )</span><br><span class="line">        conn.commit()</span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="5">
+<li><p>删除操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">no = input(&quot;要删除的部门编号：&quot;)</span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;*****&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;</span><br><span class="line">                       )</span><br><span class="line">try:</span><br><span class="line">    with conn.cursor() as cursor:</span><br><span class="line">        result = cursor.execute(&apos;delete from tb_dept where dno=%s&apos;, (no, ))</span><br><span class="line">        if result == 1:</span><br><span class="line">            print(&quot;删除成功！！&quot;)</span><br><span class="line">    conn.commit()</span><br><span class="line">except pymysql.MySQLError as err:</span><br><span class="line">    print(err)</span><br><span class="line">    conn.rollback()</span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改（更新）操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">no = input(&quot;部门编号：&quot;)</span><br><span class="line">name = input(&quot;部门名称：&quot;)</span><br><span class="line">location = input(&quot;部门所在地：&quot;)</span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;******&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;</span><br><span class="line">                       )</span><br><span class="line">try:</span><br><span class="line">    with conn.cursor() as cursor:</span><br><span class="line">        # result = cursor.execute(&apos;update tb_dept set dname=%s, dloc=%s where dno=%s&apos;, (name, location, no))</span><br><span class="line">        cursor.execute( )</span><br><span class="line">        if result == 1:  # result不为空</span><br><span class="line">            print(&quot;修改成功！！&quot;)</span><br><span class="line">    conn.commit()</span><br><span class="line">except pymysql.MySQLError as err:</span><br><span class="line">    print(err)</span><br><span class="line">    conn.rollback()</span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询操作</p>
+</li>
+</ol>
+<ul>
+<li><p>方法1</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;******&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;</span><br><span class="line">                       )</span><br><span class="line">try:</span><br><span class="line">    with conn.cursor() as cursor:</span><br><span class="line">        cursor.execute(</span><br><span class="line">            &apos;select dno, dname, dloc from tb_dept&apos;</span><br><span class="line">        )</span><br><span class="line">        # print(cursor.fetchmany(3)) 打印3条记录</span><br><span class="line">        print(cursor.fetchone()) # 返回值是一个迭代器，一次打印一条记录</span><br><span class="line">        print(cursor.fetchone())</span><br><span class="line">        for row in cursor.fetchall():</span><br><span class="line">            print(f&apos;&#123;row[0]&#125;\t&#123;row[1]&#125;\t&#123;row[2]&#125;&apos;)</span><br><span class="line"></span><br><span class="line">except pymysql.MySQLError as err:</span><br><span class="line">    print(err)</span><br><span class="line">    conn.rollback()</span><br><span class="line"></span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>方法2</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">  # 查询到的是一个字典,用字典来显示</span><br><span class="line">conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                       user=&apos;root&apos;, password=&apos;123456&apos;,</span><br><span class="line">                       database=&apos;hrs&apos;, charset=&apos;utf8&apos;,</span><br><span class="line">                       cursorclass=pymysql.cursors.DictCursor</span><br><span class="line">                       )</span><br><span class="line">try:</span><br><span class="line">    with conn.cursor() as cursor:</span><br><span class="line">        cursor.execute(</span><br><span class="line">            &apos;select dno as no, dname as name, dloc as location from tb_dept&apos;</span><br><span class="line">        )</span><br><span class="line">        for row in cursor.fetchall():</span><br><span class="line">            print(f&apos;&#123;row[&quot;no&quot;]&#125;\t&#123;row[&quot;name&quot;]&#125;\t&#123;row[&quot;location&quot;]&#125;&apos;)</span><br><span class="line">    </span><br><span class="line">except pymysql.MySQLError as err:</span><br><span class="line">    print(err)</span><br><span class="line">    conn.rollback()</span><br><span class="line">finally:</span><br><span class="line">    conn.close()</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>方法3</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">class Dept:</span><br><span class="line"></span><br><span class="line">      def __init__(self, no, name, location):</span><br><span class="line">          self.no = no</span><br><span class="line">          self.name = name</span><br><span class="line">          self.location = location</span><br><span class="line">   </span><br><span class="line">      def __str__(self):</span><br><span class="line">          return f&apos;&#123;self.no&#125;\t&#123;self.name&#125;\t&#123;self.location&#125;&apos;</span><br><span class="line"></span><br><span class="line">  conn = pymysql.connect(host=&apos;1.2.3.4&apos;, port=3306,</span><br><span class="line">                         user=&apos;root&apos;, password=&apos;******&apos;,</span><br><span class="line">                         database=&apos;hrs&apos;, charset=&apos;utf8&apos;,</span><br><span class="line">                         cursorclass=pymysql.cursors.DictCursor)</span><br><span class="line">  try:</span><br><span class="line">      with conn.cursor() as cursor:</span><br><span class="line">          cursor.execute(</span><br><span class="line">              &apos;select dno as no, dname as name, dloc as location from tb_dept&apos;</span><br><span class="line">          )</span><br><span class="line">          for row in cursor.fetchall():</span><br><span class="line">              dept = Dept(**row)</span><br><span class="line">              print(dept)</span><br><span class="line"></span><br><span class="line">  except pymysql.MySQLError as err:</span><br><span class="line">      print(err)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/21/%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87(Pillow)/" rel="next" title="上传图片(Pillow)">
+                  <i class="fa fa-chevron-left"></i> 上传图片(Pillow)
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/21/Redis%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" rel="prev" title="Redis安装和使用">
+                  Redis安装和使用 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

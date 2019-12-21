@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="配置虚拟环境的方法 方法1：PyCharm中配置虚拟坏境 方法2：PyCharm终端或者cmd中创建虚拟环境​    进入到要存放环境的文件夹中 ： python -m venv &amp;lt;环境名称&amp;gt; 方法3：使用virtualenv模块创建：virtualenv &amp;lt;环境名称&amp;gt;  进入到一个现有的虚拟环境下先下载virtulaenv模块 1(myenv) E:\workspace">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置django虚拟环境">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;21&#x2F;%E9%85%8D%E7%BD%AEdjango%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="配置虚拟环境的方法 方法1：PyCharm中配置虚拟坏境 方法2：PyCharm终端或者cmd中创建虚拟环境​    进入到要存放环境的文件夹中 ： python -m venv &amp;lt;环境名称&amp;gt; 方法3：使用virtualenv模块创建：virtualenv &amp;lt;环境名称&amp;gt;  进入到一个现有的虚拟环境下先下载virtulaenv模块 1(myenv) E:\workspace">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-19T01:30:48.765Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/12/21/%E9%85%8D%E7%BD%AEdjango%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>配置django虚拟环境 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/21/%E9%85%8D%E7%BD%AEdjango%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            配置django虚拟环境
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-21 11:08:40" itemprop="dateCreated datePublished" datetime="2019-12-21T11:08:40+08:00">2019-12-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-19 09:30:48" itemprop="dateModified" datetime="2019-11-19T09:30:48+08:00">2019-11-19</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li><p>配置虚拟环境的方法</p>
+<p>方法1：PyCharm中配置虚拟坏境</p>
+<p>方法2：PyCharm终端或者cmd中创建虚拟环境<br>​    进入到要存放环境的文件夹中 ： python -m venv &lt;环境名称&gt;</p>
+<p>方法3：使用virtualenv模块创建：virtualenv &lt;环境名称&gt;</p>
+<ul>
+<li><p>进入到一个现有的虚拟环境下先下载virtulaenv模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(myenv) E:\workspace\myenv\Scripts&gt;pip install virtualenvpip install virtualenv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看是否下载成功virtualenv模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">(myenv) E:\workspace\myenv\Scripts&gt;virtualenv</span><br><span class="line">Running virtualenv with interpreter E:\python\python.exe</span><br><span class="line">You must provide a DEST_DIR</span><br><span class="line">Usage: virtualenv.py [OPTIONS] DEST_DIR</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  --version             show program&apos;s version number and exit</span><br><span class="line">  -h, --help            show this help message and exit</span><br><span class="line">  -v, --verbose         Increase verbosity.</span><br><span class="line">  -q, --quiet           Decrease verbosity.</span><br><span class="line">  -p PYTHON_EXE, --python=PYTHON_EXE</span><br><span class="line">                        The Python interpreter to use, e.g.,</span><br><span class="line">                        --python=python3.5 will use the python3.5 interpreter</span><br><span class="line">                        to create the new environment.  The default is the</span><br><span class="line">                        interpreter that virtualenv was installed with</span><br><span class="line">                        (E:\python\python.exe)</span><br><span class="line">  --clear               Clear out the non-root install and start from scratch.</span><br><span class="line">  --no-site-packages    DEPRECATED. Retained only for backward compatibility.</span><br><span class="line">                        Not having access to global site-packages is now the</span><br><span class="line">                        default behavior.</span><br><span class="line">  --system-site-packages</span><br><span class="line">                        Give the virtual environment access to the global</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用virtualenv创建新的虚拟环境，注意必须在virtuakenv所在的目录下才能使用virtualenv模块，或者配置环境变量后可以全局使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">E:\workspace&gt; virtualenv &lt;自己的环境名称&gt;</span><br><span class="line">或者：</span><br><span class="line">E:\workspace&gt; virtualenv -p 指定python版本 --no-site-packages &lt;环境名称&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>方法4：使用docker</p>
+</li>
+<li><p>使用虚拟环境</p>
+</li>
+</ol>
+<ul>
+<li><p>windows</p>
+<ul>
+<li><p>激活环境：进入到Scripts文件夹中执行activate</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\workspace\env\firstdjango\Scripts&gt;activate</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>退出环境：deactivate</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(firstdjango) E:\workspace\env\firstdjango&gt;deactivate</span><br><span class="line">  E:\workspace\env\firstdjango&gt;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>项目</li>
+</ol>
+<ul>
+<li>安装django：pip install django==2.0.7</li>
+<li>项目创建：django-admin startproject  &lt;项目名称&gt;<ul>
+<li><code>__init__.py</code>：配置pymysql</li>
+<li>urls.py：定义路由与视图函数的关联关系</li>
+<li>settings.py：配置数据库，配置TEMPLATES等</li>
+</ul>
+</li>
+<li>应用创建：python manage.py startapp &lt;应用名称&gt;<ul>
+<li>views.py：定义视图函数</li>
+<li>models.py：定义模型</li>
+</ul>
+</li>
+<li>启动方式<ul>
+<li>python manage.py runserver (默认为127.0.0.1:8000)</li>
+<li>python manage.py runserver port (设置为127.0.0.1:port)</li>
+<li>python manege.py runserver IP:PORT 自定义启动的IP和PORT</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/21/%E5%85%B3%E8%81%94%E5%85%B3%E7%B3%BB/" rel="next" title="关联关系">
+                  <i class="fa fa-chevron-left"></i> 关联关系
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/21/django%E9%85%8D%E7%BD%AEmysql%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="prev" title="django配置mysql数据库">
+                  django配置mysql数据库 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

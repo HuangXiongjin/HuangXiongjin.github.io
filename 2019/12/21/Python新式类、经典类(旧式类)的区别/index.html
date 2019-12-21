@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Python2和Python3中的新式类、经典类(旧式类)的区别基本概念python2.x中默认都是经典类，只有显示继承了object的才是新式类 123456class Person(object):  # 新式类	passclass Person():  # 经典类	passclass Person:  # 经典类	pass  python3.x中取消了经典类，默认都是新式类，不用继承obje">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python新式类、经典类(旧式类)的区别">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;21&#x2F;Python%E6%96%B0%E5%BC%8F%E7%B1%BB%E3%80%81%E7%BB%8F%E5%85%B8%E7%B1%BB(%E6%97%A7%E5%BC%8F%E7%B1%BB)%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
+<meta property="og:site_name" content="Welcome to my blog">
+<meta property="og:description" content="Python2和Python3中的新式类、经典类(旧式类)的区别基本概念python2.x中默认都是经典类，只有显示继承了object的才是新式类 123456class Person(object):  # 新式类	passclass Person():  # 经典类	passclass Person:  # 经典类	pass  python3.x中取消了经典类，默认都是新式类，不用继承obje">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-15T01:19:27.264Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="http://yoursite.com/2019/12/21/Python%E6%96%B0%E5%BC%8F%E7%B1%BB%E3%80%81%E7%BB%8F%E5%85%B8%E7%B1%BB(%E6%97%A7%E5%BC%8F%E7%B1%BB)%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Python新式类、经典类(旧式类)的区别 | Welcome to my blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Welcome to my blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle"> </p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      
+    
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/21/Python%E6%96%B0%E5%BC%8F%E7%B1%BB%E3%80%81%E7%BB%8F%E5%85%B8%E7%B1%BB(%E6%97%A7%E5%BC%8F%E7%B1%BB)%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄雄进">
+      <meta itemprop="description" content="一个简单的学习交流的个人博客 1975436224@qq.com">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Welcome to my blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            Python新式类、经典类(旧式类)的区别
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-21 11:05:38" itemprop="dateCreated datePublished" datetime="2019-12-21T11:05:38+08:00">2019-12-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-15 09:19:27" itemprop="dateModified" datetime="2019-12-15T09:19:27+08:00">2019-12-15</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Python2和Python3中的新式类、经典类-旧式类-的区别"><a href="#Python2和Python3中的新式类、经典类-旧式类-的区别" class="headerlink" title="Python2和Python3中的新式类、经典类(旧式类)的区别"></a>Python2和Python3中的新式类、经典类(旧式类)的区别</h2><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p>python2.x中默认都是经典类，只有显示继承了object的才是新式类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Person(object):  # 新式类</span><br><span class="line">	pass</span><br><span class="line">class Person():  # 经典类</span><br><span class="line">	pass</span><br><span class="line">class Person:  # 经典类</span><br><span class="line">	pass</span><br></pre></td></tr></table></figure>
+
+<p>python3.x中取消了经典类，默认都是新式类，不用继承object也是新式类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 都是新式类写法，并无区别</span><br><span class="line">class Person(object):</span><br><span class="line">	pass</span><br><span class="line">class Person():</span><br><span class="line">	pass</span><br><span class="line">class Person:</span><br><span class="line">	pass</span><br></pre></td></tr></table></figure>
+
+<h4 id="多继承的调用顺序"><a href="#多继承的调用顺序" class="headerlink" title="多继承的调用顺序"></a>多继承的调用顺序</h4><p>以下代码是python2.x中的</p>
+<p><strong>经典类</strong>多继承搜索顺序（深度优先）：当继承多个父类的时候从左到右深度搜索需要的属性，如果父类没有，就去父类的父类中查找，如果没有再从继承的下一个父类中查找。深度优先就是把一个继承的父类一直往深度去查找。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出D</span><br></pre></td></tr></table></figure>
+
+<p>注释D中的代码，获得B</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出B</span><br></pre></td></tr></table></figure>
+
+<p>注释B中的代码，获得A</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #   self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出A</span><br></pre></td></tr></table></figure>
+
+<p>注释A中的代码，获得C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">       pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #   self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #   self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出C</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>新式类</strong>多继承的搜索顺序（广度优先）：当继承多个父类的时候从左到右广度搜索需要的属性，如果父类没有，就去继承的下一个父类中查找，广度优先其实就是广泛的从继承的父类中查找，不往深度去查找。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class A(object):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           super(B, self).__init__()</span><br><span class="line">           self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           super(D, self).__int__()</span><br><span class="line">           self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出D</span><br></pre></td></tr></table></figure>
+
+<p>注释D中的代码获得B</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class A(object):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           super(B, self).__init__()</span><br><span class="line">           self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    super(D, self).__int__()</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出B</span><br></pre></td></tr></table></figure>
+
+<p>注释B中的代码获得C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class A(object):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    super(B, self).__init__()</span><br><span class="line">       #   self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       def __init__(self)：</span><br><span class="line">           self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    super(D, self).__int__()</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出C</span><br></pre></td></tr></table></figure>
+
+<p>注释C中的代码获得A</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">class A(object):</span><br><span class="line">       def __init__(self):</span><br><span class="line">           self.n = &quot;A&quot;</span><br><span class="line">   </span><br><span class="line">   class B(A):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    super(B, self).__init__()</span><br><span class="line">       #   self.n = &quot;B&quot;</span><br><span class="line">   </span><br><span class="line">   class C(A):</span><br><span class="line">       # def __init__(self)：</span><br><span class="line">       #   self.n = &quot;C&quot;</span><br><span class="line">   </span><br><span class="line">   class D(B, C):</span><br><span class="line">   	pass</span><br><span class="line">       # def __init__(self):</span><br><span class="line">       #    super(D, self).__int__()</span><br><span class="line">       #    self.b = &quot;D&quot;</span><br><span class="line">   </span><br><span class="line">   d = D()</span><br><span class="line">   print(d.n)  # 输出A</span><br></pre></td></tr></table></figure>
+
+<h4 id="多继承"><a href="#多继承" class="headerlink" title="多继承"></a>多继承</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Food(object):</span><br><span class="line"></span><br><span class="line">     def __init__(self, name, color):</span><br><span class="line">          self.name = name</span><br><span class="line">          self.color = color</span><br><span class="line">  </span><br><span class="line">     def eatable(self):</span><br><span class="line">          print(&quot;%s can be eaten.&quot; % self.name)</span><br><span class="line">  </span><br><span class="line">     def appearance(self):</span><br><span class="line">         print(&apos;The color of the %s is %s.&apos; % (self.name, self.color))</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">class Fruits(object):</span><br><span class="line"> </span><br><span class="line">     def __init__(self, name, nutrition):</span><br><span class="line">         self.name = name</span><br><span class="line">        self.nutrition = nutrition</span><br><span class="line"> </span><br><span class="line">     def info(self):</span><br><span class="line">         print(&quot;%s can supply much %s.&quot; % (self.name, self.nutrition))</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">class Salad(Fruits, Food):  # 继承多个父类</span><br><span class="line"> </span><br><span class="line">     def __init__(self, name, nutrition, color, tasty):</span><br><span class="line">         super(Salad, self).__init__(name, nutrition)</span><br><span class="line">         Food.__init__(self, name, color)</span><br><span class="line">         self.tasty = tasty</span><br><span class="line"> </span><br><span class="line">     def taste(self):</span><br><span class="line">        print(&quot;%s is a little %s.&quot; % (self.name, self.tasty))</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> obj = Salad(&apos;orange&apos;, &apos;VC&apos;, &apos;orange&apos;, &apos;sour&apos;) </span><br><span class="line"> obj.eatable()</span><br><span class="line"> obj.appearance()</span><br><span class="line"> obj.info()</span><br><span class="line"> obj.taste()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>supper()函数为新式类的方法，采用新式类要求最顶层的父类一定要继承于object，这样就可以用super()函数来调用父类的init()等函数。每个父类都执行且执行一次，并不会出现重复调用的情况。采用super()方法时，会自动找到第一个多继承中的第一父类。<br>　　但是如果想要继续调用其它父类init()函数或两个父类的同名函数时，就要用经典类的调用方法了，即 父类名.<strong>init</strong>(self,参数），如上例</p>
+</blockquote>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><blockquote>
+<p>1、新式类继承object类，经典类不继承任何类</p>
+<p>2、新式类用super关键字继承构造方法，经典类用 父类.<strong>init</strong>(self）来继承</p>
+<p>3、新式类：广度优先查询，经典类：深度优先查询(因为新式类讲究的是新，所以要找最近的，最新的；然后经典的讲究古老，所以更远更深的)</p>
+<p>4、值得注意的是，上面是在python2中做的，在python3中不管是经典类还是新式类，都是采用的是广度优先查询，已经废弃2中的深度查询了</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/24/Python%E5%B8%B8%E8%A7%81%E7%AE%97%E6%B3%95/" rel="next" title="Python常见算法">
+                  <i class="fa fa-chevron-left"></i> Python常见算法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/21/Python%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86%E5%87%BD%E6%95%B0/" rel="prev" title="Python常见加密函数">
+                  Python常见加密函数 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python2和Python3中的新式类、经典类-旧式类-的区别"><span class="nav-number">1.</span> <span class="nav-text">Python2和Python3中的新式类、经典类(旧式类)的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本概念"><span class="nav-number">1.0.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多继承的调用顺序"><span class="nav-number">1.0.2.</span> <span class="nav-text">多继承的调用顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多继承"><span class="nav-number">1.0.3.</span> <span class="nav-text">多继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">1.0.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">黄雄进</p>
+  <div class="site-description" itemprop="description">一个简单的学习交流的个人博客 1975436224@qq.com</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄雄进</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.4.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
